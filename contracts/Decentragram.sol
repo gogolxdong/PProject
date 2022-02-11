@@ -69,7 +69,7 @@ abstract contract Ownable is Context {
     }
 }
 
-contract Decentragram is Ownable {
+contract Decentiktok is Ownable {
     string public name;
     uint256 public imageCount = 0;
     mapping(uint256 => ImageLibrary.Image) private _images;
@@ -78,7 +78,7 @@ contract Decentragram is Ownable {
         uint256 id,
         string hash,
         string description,
-        string longtitude,
+        string longitude,
         string latitude,
         string gender,
         uint256 stakeAmount,
@@ -91,7 +91,7 @@ contract Decentragram is Ownable {
         uint256 id,
         string hash,
         string description,
-        string longtitude,
+        string longitude,
         string latitude,
         string gender,
         uint256 stakeAmount,
@@ -101,7 +101,7 @@ contract Decentragram is Ownable {
     );
 
     constructor() {
-        name = "Decentragram";
+        name = "Decentiktok";
     }
 
     function getImage(uint256 _id)
@@ -128,19 +128,19 @@ contract Decentragram is Ownable {
 
     function uploadImage(
         string memory _imgHash,
-        string memory description,
-        string memory longtitude,
-        string memory latitude,
-        string memory gender,
-        uint256 stakeAmount,
-        uint256 stakeTime
+        string memory _description,
+        string memory _longitude,
+        string memory _latitude,
+        string memory _gender,
+        uint256 _stakeAmount,
+        uint256 _stakeTime
     ) public {
         require(bytes(_imgHash).length > 0, "iamge hash is empty");
-        require(bytes(description).length > 0, "description is empty");
-        require(bytes(longtitude).length > 0, "longtitude is empty");
-        require(bytes(latitude).length > 0, "latitude is empty");
-        require(stakeAmount != 0, "stake amount cannot be 0");
-        require(stakeTime != 0, "stake time cannot be 0");
+        require(bytes(_description).length > 0, "description is empty");
+        require(bytes(_longitude).length > 0, "longitude is empty");
+        require(bytes(_latitude).length > 0, "latitude is empty");
+        require(_stakeAmount != 0, "stake amount cannot be 0");
+        require(_stakeTime != 0, "stake time cannot be 0");
         require(msg.sender != address(0));
 
         imageCount++;
@@ -148,24 +148,24 @@ contract Decentragram is Ownable {
         _images[imageCount] = ImageLibrary.Image(
             imageCount,
             _imgHash,
-            description,
-            longtitude,
-            latitude,
-            gender,
-            stakeAmount,
-            stakeTime,
+            _description,
+            _longitude,
+            _latitude,
+            _gender,
+            _stakeAmount,
+            _stakeTime,
             0,
             payable(msg.sender)
         );
         emit ImageCreated(
             imageCount,
             _imgHash,
-            description,
-            longtitude,
-            latitude,
-            gender,
-            stakeAmount,
-            stakeTime,
+            _description,
+            _longitude,
+            _latitude,
+            _gender,
+            _stakeAmount,
+            _stakeTime,
             0,
             payable(msg.sender)
         );
@@ -183,7 +183,7 @@ contract Decentragram is Ownable {
             _id,
             _image.hash,
             _image.description,
-            _image.longtitude,
+            _image.longitude,
             _image.latitude,
             _image.gender,
             _image.stakeAmount,

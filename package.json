@@ -25,6 +25,7 @@
     "ethers": "^5.4.0",
     "from-exponential": "^1.1.1",
     "identicon.js": "^2.3.3",
+    "input-material-ui": "^2.9.0",
     "intl": "^1.2.5",
     "ipfs-http-client": "^56.0.1",
     "it-to-buffer": "^2.0.2",

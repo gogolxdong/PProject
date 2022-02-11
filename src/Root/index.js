@@ -5,11 +5,12 @@ import { HashRouter } from "react-router-dom";
 import Loading from "../components/Loader";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
+import { Web3ContextProvider } from "../hooks";
 
 import store from "../store";
 
 function Root() {
-    const isApp = (): boolean => {
+    const isApp = () => {
         return true;
     };
 
@@ -23,9 +24,7 @@ function Root() {
 
     const app = () => (
         <HashRouter>
-            <Provider store={store}>
-                <App />
-            </Provider>
+            <App />
         </HashRouter>
     );
 
