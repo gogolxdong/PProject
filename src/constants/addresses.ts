@@ -1,7 +1,7 @@
 import { Networks } from "./blockchain";
 
 const BSC_TESTNET = {
-    ADDRESS: "0x2f5514af7F9a5B4ffc217160CCF69b71675129aC",
+    ADDRESS: "0x2A6B654B1B8d6331b17387367eD777839e0a20Fa",
 };
 
 export const getAddresses = (networkID: number) => {

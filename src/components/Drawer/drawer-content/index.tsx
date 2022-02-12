@@ -4,7 +4,7 @@ import Social from "./social";
 import StakeIcon from "../../../assets/icons/stake.svg";
 import ReferralIcon from "../../../assets/icons/referral.svg";
 import BondIcon from "../../../assets/icons/bond.svg";
-import WonderlandIcon from "../../../assets/icons/photo.png";
+import WonderlandIcon from "../../../assets/icons/logo.jpg";
 import DashboardIcon from "../../../assets/icons/dashboard.svg";
 import { trim, shorten } from "../../../helpers";
 import { useAddress } from "../../../hooks";
@@ -33,7 +33,7 @@ function NavContent() {
     return (
         <div className="dapp-sidebar">
             <div className="branding-header">
-                <img alt="" src={WonderlandIcon} />
+                <img alt="" src={WonderlandIcon} width="100px" />
 
                 {address && (
                     <div className="wallet-link">

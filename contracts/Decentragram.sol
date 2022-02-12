@@ -148,6 +148,7 @@ contract Decentiktok is Ownable {
         _images[imageCount] = ImageLibrary.Image(
             imageCount,
             _imgHash,
+            "",
             _description,
             _longitude,
             _latitude,

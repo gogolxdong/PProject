@@ -90,7 +90,7 @@ function App() {
             fontSize: 14,
         },
         dataWidth: {
-            width: "33vw",
+            width: "50vw",
         },
         body: {
             justifyContent: "center",
@@ -218,7 +218,7 @@ function App() {
 
     var [description, setDescription] = useState();
     var [imageHash, setImageHash] = useState();
-    var [longitude, setLongtitude] = useState();
+    var [longitude, setLongitude] = useState();
     var [latitude, setLatitude] = useState();
     var [gender, setGender] = useState();
     var [stakeTime, setTime] = useState();
@@ -251,32 +251,32 @@ function App() {
         [connected],
     );
 
-    // const createUrl = useMemo()
     const loadAccountDetails = createAsyncThunk("account/loadAccountDetails", async ({ networkID, provider, address }) => {
         const addresses = getAddresses(networkID);
-        const decentiktok = new ethers.Contract(addresses.ADDRESS, Decentiktok, provider);
+        const decentiktok = new ethers.Contract(addresses.ADDRESS, Decentiktok, provider.getSigner());
         let images = [];
         const imageCount = await decentiktok.imageCount();
         console.log("imageCount:", imageCount);
-        for (var i = 0; i < imageCount; i++) {
+        for (var i = 1; i <= imageCount; i++) {
             var image = await decentiktok.getImage(i);
-
-            images.push(image);
+            var res = ipfs.cat(image.hash);
+            var buffer = await toBuffer(res);
+            var blob = new Blob([buffer]);
+            var clonedImage = Object.assign({}, image);
+            clonedImage.src = URL.createObjectURL(blob);
+            images.push(clonedImage);
         }
         setImages(images);
     });
-    const loadAccount = useCallback(
+    const LoadImages = useCallback(
         loadProvider => {
             dispatch(loadAccountDetails({ networkID: chainID, address, provider: loadProvider }));
         },
         [connected],
     );
     useEffect(() => {
-        if (connected) {
-            let loadProvider = provider;
-            if (address && connected) {
-                loadAccount(loadProvider);
-            }
+        if (connected && address) {
+            LoadImages(provider);
         }
     }, [connected]);
 
@@ -286,8 +286,8 @@ function App() {
             return;
         }
         function success(position) {
-            setLatitude(position.coords.latitude);
-            setLongtitude(position.coords.longitude);
+            setLongitude(String(position.coords.longitude));
+            setLatitude(String(position.coords.latitude));
         }
         function error() {
             alert("<p>cannot get geo location/p>");
@@ -297,10 +297,6 @@ function App() {
 
     const address = useAddress();
 
-    function tipImageOwner(id, tipAmount) {
-        decentiktok.tipImageOwner(id, { from: address, value: tipAmount });
-    }
-
     async function readAdd(event) {
         event.preventDefault();
         const file = event.target.files?.item(0);
@@ -309,7 +305,6 @@ function App() {
         reader.onloadend = async () => {
             var arrayBuffer = reader.result;
             var result = await ipfs.add(arrayBuffer);
-            console.log(result.path);
             setImageHash(result.path);
         };
         const preview = document.getElementById("preview");
@@ -461,22 +456,17 @@ function App() {
                             className={classes.chipBlue}
                             label="Upload"
                             onClick={async () => {
-                                decentiktok.on("ImageCreated", (error, event) => {
-                                    if (error) {
-                                        console.log(error);
-                                    } else {
-                                        console.log("transactionHash:" + event.transactionHash);
-                                        console.log("blockNumber:" + event.blockNumber);
+                                decentiktok.on("ImageCreated", result => {
+                                    if (result) {
+                                        console.log("transactionHash:" + result.transactionHash);
+                                        console.log("blockNumber:" + result.blockNumber);
                                     }
                                 });
                                 var days = Number(stakeTime.split(" ")[0]) * 86400;
                                 var time = Math.round(Date.now() / 1000) + days;
-                                console.log(decentiktok);
-                                console.log(imageHash, description, longitude, latitude, gender, stakeAmount, time);
-                                var result = await decentiktok.uploadImage(imageHash, description, longitude, latitude, gender, stakeAmount, time);
+                                var result = await decentiktok.uploadImage(json.longitude, json.latitude, json.imageHash, json.description, json.gender, json.stakeAmount, time);
                                 var tx = await result.wait();
-                                console.log(tx);
-                                const res = ipfs.cat(imageHash);
+                                const res = ipfs.cat(json.imageHash);
                                 const buffer = await toBuffer(res);
                                 const blob = new Blob([buffer]);
                                 const added = document.getElementById("added");
@@ -487,6 +477,7 @@ function App() {
                                         URL.revokeObjectURL(added.src);
                                     };
                                 }
+                                LoadImages(provider);
                             }}
                         />
                     </form>
@@ -502,26 +493,12 @@ function App() {
         <ViewBase>
             <Switch>
                 <Route exact path="/lobby">
-                    <div className="stake-view">
+                    <div className="image-view">
                         {images.map((image, key) => {
                             return (
-                                <div className="card mb-4" key={key} style={{ color: "white" }}>
+                                <div className="card mb-4" key={key}>
                                     <div className="card-header">
-                                        <img
-                                            id={key}
-                                            className="mr-2"
-                                            width="200"
-                                            alt={image.description}
-                                            onLoad={async e => {
-                                                const res = ipfs.cat(image.hash);
-                                                const blob = new Blob([await toBuffer(res)]);
-                                                e.target.src = URL.createObjectURL(blob);
-                                                console.log(e.target.src);
-                                                e.target.onload = function (e) {
-                                                    URL.revokeObjectURL(image.src);
-                                                };
-                                            }}
-                                        />
+                                        <img id={key} className="mr-2" width="200" alt={image.description} src={image.src} />
                                     </div>
                                     <ul id="imageList" className="list-group list-group-flush">
                                         {image.description && (
@@ -538,7 +515,7 @@ function App() {
                                                 name={image.id}
                                                 onClick={event => {
                                                     let tipAmount = ethers.utils.parseEther("0.001");
-                                                    tipImageOwner(event.target.name, tipAmount);
+                                                    decentiktok.tipImageOwner(event.target.name, { from: address, value: tipAmount });
                                                 }}
                                             >
                                                 TIP
