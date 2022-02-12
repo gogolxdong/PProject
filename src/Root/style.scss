@@ -205,467 +205,467 @@ ul li {
     }
 }
 
-// .referral-view {
-//     width: 89%;
-//     max-width: 833px;
-//     margin: auto;
+.referral-view {
+    width: 89%;
+    max-width: 833px;
+    margin: auto;
 
-//     .referral-card {
-//         position: relative;
-//         z-index: 2;
+    .referral-card {
+        position: relative;
+        z-index: 2;
 
-//         @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-//             background: rgba(36, 39, 41, 0.1);
-//             backdrop-filter: blur(40px);
-//         }
+        @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+            background: rgba(36, 39, 41, 0.1);
+            backdrop-filter: blur(40px);
+        }
 
-//         /* slightly transparent fallback for Firefox (not supporting backdrop-filter) */
-//         @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-//             background: #181b1c;
-//         }
+        /* slightly transparent fallback for Firefox (not supporting backdrop-filter) */
+        @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+            background: #181b1c;
+        }
 
-//         border-radius: 10px;
-//         padding: 20px;
-//         width: 100%;
+        border-radius: 10px;
+        padding: 20px;
+        width: 100%;
 
-//         .referral-card-grid {
-//             margin: 0;
-//             width: 100%;
-//         }
+        .referral-card-grid {
+            margin: 0;
+            width: 100%;
+        }
 
-//         .referral-card-header {
-//             .referral-card-header-title {
-//                 font-family: Montserrat;
-//                 font-weight: bold;
-//                 font-size: 18px;
-//                 color: #ffffff;
-//                 margin-bottom: 4px;
-//             }
-//         }
+        .referral-card-header {
+            .referral-card-header-title {
+                font-family: Montserrat;
+                font-weight: bold;
+                font-size: 18px;
+                color: #ffffff;
+                margin-bottom: 4px;
+            }
+        }
 
-//         .referral-card-metrics {
-//             display: flex;
-//             width: 100%;
-//             padding: 0;
-//             text-align: center;
-//             margin-top: 10px;
+        .referral-card-metrics {
+            display: flex;
+            width: 100%;
+            padding: 0;
+            text-align: center;
+            margin-top: 10px;
 
-//             .referral-card-apy,
-//             .referral-card-tvl,
-//             .referral-card-index {
-//                 flex: 1;
-//                 display: flex;
-//                 flex-direction: column;
-//                 align-items: center;
-//                 text-overflow: ellipsis;
-//                 white-space: nowrap;
-//                 overflow: hidden;
+            .referral-card-apy,
+            .referral-card-tvl,
+            .referral-card-index {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
 
-//                 .referral-card-metrics-title {
-//                     font-family: Montserrat Medium;
-//                     font-style: normal;
-//                     font-weight: 500;
-//                     font-size: 20px;
-//                     color: rgba(255, 255, 255, 0.6);
-//                     margin-bottom: 2px;
-//                 }
+                .referral-card-metrics-title {
+                    font-family: Montserrat Medium;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 20px;
+                    color: rgba(255, 255, 255, 0.6);
+                    margin-bottom: 2px;
+                }
 
-//                 .referral-card-metrics-value {
-//                     font-family: Montserrat Bold;
-//                     font-style: normal;
-//                     font-weight: bold;
-//                     font-size: 24px;
-//                     line-height: 29px;
-//                     color: #ffffff;
-//                 }
-//             }
-//         }
+                .referral-card-metrics-value {
+                    font-family: Montserrat Bold;
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 24px;
+                    line-height: 29px;
+                    color: #ffffff;
+                }
+            }
+        }
 
-//         .referral-card-area {
-//             .choose-son-view {
-//                 display: flex;
-//                 align-items: center;
-//                 justify-content: center;
-//                 flex-direction: column;
-//                 overflow: hidden;
+        .referral-card-area {
+            .choose-son-view {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                overflow: hidden;
 
-//                 max-width: 833px;
-//                 margin: auto;
+                max-width: 833px;
+                margin: auto;
 
-//                 .choose-son-view-card {
-//                     border-radius: 10px;
-//                     padding: 20px;
-//                     width: 100%;
+                .choose-son-view-card {
+                    border-radius: 10px;
+                    padding: 20px;
+                    width: 100%;
 
-//                     position: relative;
-//                     z-index: 2;
+                    position: relative;
+                    z-index: 2;
 
-//                     @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-//                         background: rgba(36, 39, 41, 0.1);
-//                         backdrop-filter: blur(40px);
-//                     }
+                    @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+                        background: rgba(36, 39, 41, 0.1);
+                        backdrop-filter: blur(40px);
+                    }
 
-//                     /* slightly transparent fallback for Firefox (not supporting backdrop-filter) */
-//                     @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-//                         background: #181b1c;
-//                     }
+                    /* slightly transparent fallback for Firefox (not supporting backdrop-filter) */
+                    @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+                        background: #181b1c;
+                    }
 
-//                     .choose-son-view-card-header {
-//                         .choose-son-view-card-title {
-//                             font-family: Montserrat Bold;
-//                             font-weight: bold;
-//                             font-size: 20px;
-//                             color: #ffffff;
-//                         }
-//                     }
+                    .choose-son-view-card-header {
+                        .choose-son-view-card-title {
+                            font-family: Montserrat Bold;
+                            font-weight: bold;
+                            font-size: 20px;
+                            color: #ffffff;
+                        }
+                    }
 
-//                     .choose-son-view-card-metrics {
-//                         margin: 30px 0;
+                    .choose-son-view-card-metrics {
+                        margin: 30px 0;
 
-//                         .choose-son-view-card-metrics-title {
-//                             font-family: Montserrat Medium;
-//                             font-weight: 500;
-//                             font-size: 20px;
-//                             line-height: 24px;
-//                             color: rgba(255, 255, 255, 0.6);
-//                         }
+                        .choose-son-view-card-metrics-title {
+                            font-family: Montserrat Medium;
+                            font-weight: 500;
+                            font-size: 20px;
+                            line-height: 24px;
+                            color: rgba(255, 255, 255, 0.6);
+                        }
 
-//                         .choose-son-view-card-metrics-value {
-//                             font-family: Montserrat Bold;
-//                             font-weight: bold;
-//                             font-size: 24px;
-//                             line-height: 29px;
-//                             color: #ffffff;
-//                             display: flex;
-//                             align-items: center;
-//                             flex-direction: column;
-//                         }
-//                     }
+                        .choose-son-view-card-metrics-value {
+                            font-family: Montserrat Bold;
+                            font-weight: bold;
+                            font-size: 24px;
+                            line-height: 29px;
+                            color: #ffffff;
+                            display: flex;
+                            align-items: center;
+                            flex-direction: column;
+                        }
+                    }
 
-//                     .choose-son-view-card-table {
-//                         .MuiTableCell-body {
-//                             color: #fff;
-//                         }
-//                         .MuiTableCell-root {
-//                             padding: 0;
-//                         }
-//                         .choose-son-view-card-table-title {
-//                             font-family: Montserrat SemiBold;
-//                             font-weight: 600;
-//                             font-size: 14px;
-//                             line-height: 17px;
-//                             color: #ffffff;
-//                         }
-//                     }
-//                 }
+                    .choose-son-view-card-table {
+                        .MuiTableCell-body {
+                            color: #fff;
+                        }
+                        .MuiTableCell-root {
+                            padding: 0;
+                        }
+                        .choose-son-view-card-table-title {
+                            font-family: Montserrat SemiBold;
+                            font-weight: 600;
+                            font-size: 14px;
+                            line-height: 17px;
+                            color: #ffffff;
+                        }
+                    }
+                }
 
-//                 .choose-son-view-card-container {
-//                     margin-top: 16px;
+                .choose-son-view-card-container {
+                    margin-top: 16px;
 
-//                     .son-data-card {
-//                         margin: auto !important;
-//                         background: rgba(36, 39, 41, 0.1);
-//                         backdrop-filter: blur(40px);
-//                         border-radius: 10px;
-//                         padding: 20px;
-//                         width: 100%;
+                    .son-data-card {
+                        margin: auto !important;
+                        background: rgba(36, 39, 41, 0.1);
+                        backdrop-filter: blur(40px);
+                        border-radius: 10px;
+                        padding: 20px;
+                        width: 100%;
 
-//                         .son-pair {
-//                             display: flex !important;
-//                             align-items: center;
-//                             justify-content: left;
-//                             margin-bottom: 15px;
-//                             .MuiBox-root {
-//                                 margin-right: 10px;
-//                             }
-//                             .son-address {
-//                                 svg {
-//                                     margin-left: 5px;
-//                                     vertical-align: middle;
-//                                     font-size: 15px;
-//                                 }
-//                             }
-//                         }
-//                         .data-row {
-//                             margin-bottom: 13px;
-//                             display: flex;
-//                             justify-content: space-between;
-//                             flex-direction: row;
-//                             margin: 12px 0;
+                        .son-pair {
+                            display: flex !important;
+                            align-items: center;
+                            justify-content: left;
+                            margin-bottom: 15px;
+                            .MuiBox-root {
+                                margin-right: 10px;
+                            }
+                            .son-address {
+                                svg {
+                                    margin-left: 5px;
+                                    vertical-align: middle;
+                                    font-size: 15px;
+                                }
+                            }
+                        }
+                        .data-row {
+                            margin-bottom: 13px;
+                            display: flex;
+                            justify-content: space-between;
+                            flex-direction: row;
+                            margin: 12px 0;
 
-//                             .son-profit {
-//                                 display: flex;
-//                                 align-items: center;
+                            .son-profit {
+                                display: flex;
+                                align-items: center;
 
-//                                 svg {
-//                                     margin-right: 5px;
-//                                 }
-//                             }
-//                         }
-//                         .son-link {
-//                             margin-top: 10px;
-//                             text-align: center;
-//                             a {
-//                                 width: 96%;
-//                             }
-//                         }
-//                     }
-//                 }
+                                svg {
+                                    margin-right: 5px;
+                                }
+                            }
+                        }
+                        .son-link {
+                            margin-top: 10px;
+                            text-align: center;
+                            a {
+                                width: 96%;
+                            }
+                        }
+                    }
+                }
 
-//                 .currency-icon {
-//                     display: inline-block;
-//                     min-width: 15px;
-//                 }
+                .currency-icon {
+                    display: inline-block;
+                    min-width: 15px;
+                }
 
-//                 .son-address-title {
-//                     font-family: Montserrat SemiBold;
-//                     font-weight: 600;
-//                     font-size: 14px;
-//                     color: #ffffff;
-//                 }
+                .son-address-title {
+                    font-family: Montserrat SemiBold;
+                    font-weight: 600;
+                    font-size: 14px;
+                    color: #ffffff;
+                }
 
-//                 .son-table-btn {
-//                     background: rgba(255, 255, 255, 0.2);
-//                     border: 1px solid #767676;
-//                     border-radius: 10px;
-//                     padding: 6px 35.5px;
-//                     text-align: center;
+                .son-table-btn {
+                    background: rgba(255, 255, 255, 0.2);
+                    border: 1px solid #767676;
+                    border-radius: 10px;
+                    padding: 6px 35.5px;
+                    text-align: center;
 
-//                     &:hover {
-//                         border: 1px solid rgba(255, 255, 255, 0.6);
-//                     }
+                    &:hover {
+                        border: 1px solid rgba(255, 255, 255, 0.6);
+                    }
 
-//                     p {
-//                         font-family: Montserrat Semibold;
-//                         font-style: normal;
-//                         font-weight: 600;
-//                         font-size: 16px;
-//                         color: #ffffff;
-//                     }
-//                 }
+                    p {
+                        font-family: Montserrat Semibold;
+                        font-style: normal;
+                        font-weight: 600;
+                        font-size: 16px;
+                        color: #ffffff;
+                    }
+                }
 
-//                 .MuiTable-root {
-//                     margin: 10px 0px;
-//                 }
+                .MuiTable-root {
+                    margin: 10px 0px;
+                }
 
-//                 .MuiTableRow-head {
-//                     .MuiTableCell-alignLeft {
-//                         padding-left: 20px;
-//                     }
-//                 }
+                .MuiTableRow-head {
+                    .MuiTableCell-alignLeft {
+                        padding-left: 20px;
+                    }
+                }
 
-//                 .MuiTableCell-root {
-//                     p {
-//                         margin: 0 !important;
-//                         display: flex !important;
-//                         align-items: center;
-//                         justify-content: space-evenly;
-//                         white-space: nowrap;
-//                         img {
-//                             margin-right: 3px;
-//                         }
-//                     }
-//                     &.MuiTableCell-alignLeft {
-//                         display: flex;
-//                     }
+                .MuiTableCell-root {
+                    p {
+                        margin: 0 !important;
+                        display: flex !important;
+                        align-items: center;
+                        justify-content: space-evenly;
+                        white-space: nowrap;
+                        img {
+                            margin-right: 3px;
+                        }
+                    }
+                    &.MuiTableCell-alignLeft {
+                        display: flex;
+                    }
 
-//                     border-bottom: none;
-//                 }
+                    border-bottom: none;
+                }
 
-//                 .MuiTableBody-root .MuiTableRow-root .MuiTableCell-alignLeft {
-//                     justify-content: space-between;
-//                     div.ohm-pairs {
-//                         width: 33%;
-//                         vertical-align: middle !important;
-//                         align-items: center !important;
-//                         justify-content: center !important;
-//                         margin-bottom: 0 !important;
-//                         .ohm-pairs div.son-address p,
-//                         .ohm-pairs svg {
-//                             align-self: center !important;
-//                             line-height: 100% !important;
-//                             font-weight: bold !important;
-//                             margin-bottom: 0em !important;
-//                             padding: 0 !important;
-//                             font-family: inherit;
-//                             vertical-align: text-top !important;
-//                         }
-//                         .ohm-logo-bg {
-//                             margin-left: 0;
-//                             border-radius: 20px;
-//                             height: 40px;
-//                             width: 40px;
-//                         }
-//                     }
-//                     div.son-address {
-//                         width: 60%;
-//                         margin-left: 8px !important;
-//                         display: flex;
-//                         flex-direction: column;
-//                         justify-content: center;
-//                         text-align: left;
-//                         align-items: flex-start;
-//                         p {
-//                             margin-bottom: unset !important;
-//                             line-height: 140% !important;
-//                         }
-//                         svg {
-//                             margin-left: 3px !important;
-//                             font-size: 1.2em !important;
-//                         }
-//                     }
-//                 }
-//             }
-//             .referral-card-wallet-notification {
-//                 text-align: center;
+                .MuiTableBody-root .MuiTableRow-root .MuiTableCell-alignLeft {
+                    justify-content: space-between;
+                    div.ohm-pairs {
+                        width: 33%;
+                        vertical-align: middle !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        margin-bottom: 0 !important;
+                        .ohm-pairs div.son-address p,
+                        .ohm-pairs svg {
+                            align-self: center !important;
+                            line-height: 100% !important;
+                            font-weight: bold !important;
+                            margin-bottom: 0em !important;
+                            padding: 0 !important;
+                            font-family: inherit;
+                            vertical-align: text-top !important;
+                        }
+                        .ohm-logo-bg {
+                            margin-left: 0;
+                            border-radius: 20px;
+                            height: 40px;
+                            width: 40px;
+                        }
+                    }
+                    div.son-address {
+                        width: 60%;
+                        margin-left: 8px !important;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        text-align: left;
+                        align-items: flex-start;
+                        p {
+                            margin-bottom: unset !important;
+                            line-height: 140% !important;
+                        }
+                        svg {
+                            margin-left: 3px !important;
+                            font-size: 1.2em !important;
+                        }
+                    }
+                }
+            }
+            .referral-card-wallet-notification {
+                text-align: center;
 
-//                 .referral-card-wallet-connect-btn {
-//                     background: rgba(255, 255, 255, 0.2);
-//                     box-shadow: 0px 0px 10px rgba(44, 39, 109, 0.1);
-//                     border-radius: 10px;
-//                     padding: 14px 58px;
-//                     cursor: pointer;
-//                     margin: auto;
-//                     max-width: 280px;
-//                     margin-top: 20px;
+                .referral-card-wallet-connect-btn {
+                    background: rgba(255, 255, 255, 0.2);
+                    box-shadow: 0px 0px 10px rgba(44, 39, 109, 0.1);
+                    border-radius: 10px;
+                    padding: 14px 58px;
+                    cursor: pointer;
+                    margin: auto;
+                    max-width: 280px;
+                    margin-top: 20px;
 
-//                     p {
-//                         font-family: Montserrat SemiBold;
-//                         font-weight: 600;
-//                         font-size: 18px;
-//                         color: #ffffff;
-//                     }
-//                 }
+                    p {
+                        font-family: Montserrat SemiBold;
+                        font-weight: 600;
+                        font-size: 18px;
+                        color: #ffffff;
+                    }
+                }
 
-//                 .referral-card-wallet-desc-text {
-//                     font-family: Montserrat Light;
-//                     font-weight: 300;
-//                     font-size: 14px;
-//                     color: rgba(255, 255, 255, 0.6);
-//                     margin-top: 10px;
-//                     margin-bottom: 6px;
-//                 }
-//             }
+                .referral-card-wallet-desc-text {
+                    font-family: Montserrat Light;
+                    font-weight: 300;
+                    font-size: 14px;
+                    color: rgba(255, 255, 255, 0.6);
+                    margin-top: 10px;
+                    margin-bottom: 6px;
+                }
+            }
 
-//             .referral-card-action-area {
-//                 width: 100%;
-//                 margin-top: 25px;
+            .referral-card-action-area {
+                width: 100%;
+                margin-top: 25px;
 
-//                 .referral-card-action-stage-btns-wrap {
-//                     display: flex;
-//                     align-items: center;
-//                     justify-content: center;
+                .referral-card-action-stage-btns-wrap {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
 
-//                     .referral-card-action-stage-btn {
-//                         margin: 0px 30px;
-//                         padding: 6px;
-//                         cursor: pointer;
-//                         transition: all 0.4s ease;
+                    .referral-card-action-stage-btn {
+                        margin: 0px 30px;
+                        padding: 6px;
+                        cursor: pointer;
+                        transition: all 0.4s ease;
 
-//                         p {
-//                             font-family: Montserrat SemiBold;
-//                             font-style: normal;
-//                             font-weight: 600;
-//                             font-size: 18px;
-//                             color: rgba(255, 255, 255, 0.6);
-//                         }
-//                     }
+                        p {
+                            font-family: Montserrat SemiBold;
+                            font-style: normal;
+                            font-weight: 600;
+                            font-size: 18px;
+                            color: rgba(255, 255, 255, 0.6);
+                        }
+                    }
 
-//                     .referral-card-action-stage-btn.active {
-//                         p {
-//                             color: #ffffff;
-//                         }
+                    .referral-card-action-stage-btn.active {
+                        p {
+                            color: #ffffff;
+                        }
 
-//                         border-bottom: 1px solid #ffffff;
-//                     }
-//                 }
+                        border-bottom: 1px solid #ffffff;
+                    }
+                }
 
-//                 .referral-card-action-row {
-//                     display: flex;
-//                     align-items: center;
-//                     justify-content: space-between;
-//                     margin-top: 20px;
+                .referral-card-action-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-top: 20px;
 
-//                     .referral-card-action-input {
-//                         width: 100%;
+                    .referral-card-action-input {
+                        width: 100%;
 
-//                         background: rgba(255, 255, 255, 0.2);
-//                         border: 1px solid rgba(255, 255, 255, 0.2);
-//                         border-radius: 10px;
-//                         outline: none;
+                        background: rgba(255, 255, 255, 0.2);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        border-radius: 10px;
+                        outline: none;
 
-//                         .MuiOutlinedInput-input {
-//                             font-family: Montserrat Medium;
-//                             font-style: normal;
-//                             font-weight: 500;
-//                             font-size: 16px;
-//                             color: rgba(255, 255, 255, 0.6);
-//                             padding: 14px 20px;
-//                         }
+                        .MuiOutlinedInput-input {
+                            font-family: Montserrat Medium;
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 16px;
+                            color: rgba(255, 255, 255, 0.6);
+                            padding: 14px 20px;
+                        }
 
-//                         .MuiOutlinedInput-notchedOutline {
-//                             border-color: rgba(255, 255, 255, 0.2) !important;
-//                         }
+                        .MuiOutlinedInput-notchedOutline {
+                            border-color: rgba(255, 255, 255, 0.2) !important;
+                        }
 
-//                         .referral-card-action-input-btn {
-//                             cursor: pointer;
+                        .referral-card-action-input-btn {
+                            cursor: pointer;
 
-//                             p {
-//                                 font-family: Montserrat SemiBold;
-//                                 font-weight: 600;
-//                                 font-size: 18px;
-//                                 color: #ffffff;
-//                             }
-//                         }
-//                     }
+                            p {
+                                font-family: Montserrat SemiBold;
+                                font-weight: 600;
+                                font-size: 18px;
+                                color: #ffffff;
+                            }
+                        }
+                    }
 
-//                     .referral-card-tab-panel {
-//                         min-width: 215px;
-//                         margin-left: 10px;
+                    .referral-card-tab-panel {
+                        min-width: 215px;
+                        margin-left: 10px;
 
-//                         .referral-card-tab-panel-btn {
-//                             background: rgba(255, 255, 255, 0.2);
-//                             box-shadow: 0px 0px 10px rgba(44, 39, 109, 0.1);
-//                             border-radius: 10px;
-//                             padding: 14px 0px;
-//                             cursor: pointer;
-//                             text-align: center;
+                        .referral-card-tab-panel-btn {
+                            background: rgba(255, 255, 255, 0.2);
+                            box-shadow: 0px 0px 10px rgba(44, 39, 109, 0.1);
+                            border-radius: 10px;
+                            padding: 14px 0px;
+                            cursor: pointer;
+                            text-align: center;
 
-//                             p {
-//                                 font-family: Montserrat SemiBold;
-//                                 font-style: normal;
-//                                 font-weight: 600;
-//                                 font-size: 18px;
-//                                 color: #ffffff;
-//                             }
-//                         }
-//                     }
-//                 }
+                            p {
+                                font-family: Montserrat SemiBold;
+                                font-style: normal;
+                                font-weight: 600;
+                                font-size: 18px;
+                                color: #ffffff;
+                            }
+                        }
+                    }
+                }
 
-//                 .referral-card-action-help-text {
-//                     margin-top: 10px;
+                .referral-card-action-help-text {
+                    margin-top: 10px;
 
-//                     p {
-//                         font-family: Montserrat Light;
-//                         font-style: normal;
-//                         font-weight: 300;
-//                         font-size: 14px;
-//                         line-height: 17px;
-//                         text-align: center;
-//                         color: rgba(255, 255, 255, 0.6);
-//                     }
-//                 }
-//             }
+                    p {
+                        font-family: Montserrat Light;
+                        font-style: normal;
+                        font-weight: 300;
+                        font-size: 14px;
+                        line-height: 17px;
+                        text-align: center;
+                        color: rgba(255, 255, 255, 0.6);
+                    }
+                }
+            }
 
-//             .referral-user-data {
-//                 justify-content: center;
-//                 margin: auto;
-//                 padding: 0 5px;
-//                 margin-top: 30px;
-//             }
-//         }
-//     }
-// }
+            .referral-user-data {
+                justify-content: center;
+                margin: auto;
+                padding: 0 5px;
+                margin-top: 30px;
+            }
+        }
+    }
+}
 
 @media screen and (max-width: 1240px) {
     .choose-son-view {

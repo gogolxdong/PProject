@@ -15,8 +15,10 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
-import { Zoom } from "@material-ui/core";
+import { Grid, InputAdornment, OutlinedInput, Zoom, Slider } from "@material-ui/core";
 import "./App.css";
+import "./style.scss";
+
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const toBuffer = require("it-to-buffer");
@@ -280,7 +282,7 @@ function App() {
         }
     }, [connected]);
 
-    useMemo(() => {
+    function getLongLat() {
         if (!navigator.geolocation) {
             alert("<p>doesn't support geo location</p>");
             return;
@@ -289,11 +291,29 @@ function App() {
             setLongitude(String(position.coords.longitude));
             setLatitude(String(position.coords.latitude));
         }
-        function error() {
-            alert("<p>cannot get geo location</p>");
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0,
+        };
+        function error(err) {
+            switch (err.code) {
+                case 1:
+                    alert("PERMISSION_DENIED");
+                    break;
+                case 2:
+                    alert("POSITION_UNAVAILABLE");
+                    break;
+                case 3:
+                    alert("TIMEOUT");
+                    break;
+                default:
+                    alert("UNKNOWN_ERROR");
+                    break;
+            }
         }
-        navigator.geolocation.getCurrentPosition(success, error);
-    });
+        navigator.geolocation.getCurrentPosition(success, error, options);
+    }
 
     const address = useAddress();
 
@@ -365,7 +385,7 @@ function App() {
                             }}
                         />
                         <br />
-                        <TextField
+                        <OutlinedInput
                             id="outlined-basic"
                             color="white"
                             size="medium"
@@ -375,6 +395,14 @@ function App() {
                             value={longitude}
                             required
                             fullWidth
+                            onChange={e => setLongitude(e.target.value)}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <div onClick={() => getLongLat()} className="referral-card-action-input-btn">
+                                        <p>longitude</p>
+                                    </div>
+                                </InputAdornment>
+                            }
                         />
                         <br />
                         <TextField
