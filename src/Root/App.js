@@ -290,7 +290,7 @@ function App() {
             setLatitude(String(position.coords.latitude));
         }
         function error() {
-            alert("<p>cannot get geo location/p>");
+            alert("<p>cannot get geo location</p>");
         }
         navigator.geolocation.getCurrentPosition(success, error);
     });
