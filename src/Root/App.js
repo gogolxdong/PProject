@@ -254,18 +254,16 @@ function App() {
     );
 
     const loadAccountDetails = createAsyncThunk("account/loadAccountDetails", async ({ networkID, provider, address }) => {
-        const addresses = getAddresses(networkID);
-        const decentiktok = new ethers.Contract(addresses.ADDRESS, Decentiktok, provider.getSigner());
         let images = [];
         const imageCount = await decentiktok.imageCount();
         console.log("imageCount:", imageCount);
         for (var i = 1; i <= imageCount; i++) {
             var image = await decentiktok.getImage(i);
-            var res = ipfs.cat(image.hash);
-            var buffer = await toBuffer(res);
-            var blob = new Blob([buffer]);
+            // var res = ipfs.cat(image.hash);
+            // var buffer = await toBuffer(res);
+            // var blob = new Blob([buffer]);
             var clonedImage = Object.assign({}, image);
-            clonedImage.src = URL.createObjectURL(blob);
+            // clonedImage.src = URL.createObjectURL(blob);
             images.push(clonedImage);
         }
         setImages(images);
@@ -283,6 +281,7 @@ function App() {
         }
     }, [connected]);
 
+    useMemo(() => {});
     function getLongLat() {
         if (!navigator.geolocation) {
             alert("<p>doesn't support geo location</p>");
