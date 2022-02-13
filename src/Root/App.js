@@ -15,7 +15,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
-import { Grid, InputAdornment, OutlinedInput, Zoom, Slider } from "@material-ui/core";
+import { Grid, InputAdornment, OutlinedInput, Zoom, Slider, MenuItem } from "@material-ui/core";
 import "./App.css";
 import "./style.scss";
 
@@ -277,6 +277,7 @@ function App() {
         [connected],
     );
     useEffect(() => {
+        getLongLat();
         if (connected && address) {
             LoadImages(provider);
         }
@@ -396,13 +397,6 @@ function App() {
                             required
                             fullWidth
                             onChange={e => setLongitude(e.target.value)}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <div onClick={() => getLongLat()} className="referral-card-action-input-btn">
-                                        <p>longitude</p>
-                                    </div>
-                                </InputAdornment>
-                            }
                         />
                         <br />
                         <TextField
@@ -419,6 +413,7 @@ function App() {
                         <br />
                         <TextField
                             id="gender"
+                            select
                             list="genderlist"
                             color="white"
                             size="medium"
@@ -433,11 +428,11 @@ function App() {
                                 onFormChange();
                             }}
                             fullWidth
-                        />
-                        <datalist id="genderlist">
-                            <option>Male</option>
-                            <option>Female</option>
-                        </datalist>
+                        >
+                            <MenuItem value={"Male"}>Male</MenuItem>
+                            <MenuItem value={"Female"}>Female</MenuItem>
+                        </TextField>
+
                         <br />
                         <TextField
                             id="stakeAmount"
@@ -458,6 +453,7 @@ function App() {
                         <br />
                         <TextField
                             id="stakeTime"
+                            select
                             color="white"
                             size="medium"
                             label="Stake Time"
@@ -473,12 +469,12 @@ function App() {
                                 onFormChange();
                             }}
                             fullWidth
-                        />
-                        <datalist id="stakeTimeList">
-                            <option>30 days</option>
-                            <option>60 days</option>
-                            <option>180 days</option>
-                        </datalist>
+                        >
+                            <MenuItem value={"30 days"}>30 days</MenuItem>
+                            <MenuItem value={"60 days"}>60 days</MenuItem>
+                            <MenuItem value={"180 days"}>180 days</MenuItem>
+                        </TextField>
+
                         <br />
                         <Chip
                             className={classes.chipBlue}
