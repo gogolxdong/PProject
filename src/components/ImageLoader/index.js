@@ -6,6 +6,8 @@ import { useWeb3Context } from "../../hooks";
 import { BigNumber, ethers } from "ethers";
 import "./style.scss";
 
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 const toBuffer = require("it-to-buffer");
 
 const { create } = require("ipfs-http-client");
@@ -50,7 +52,13 @@ class ImageLoader extends Component {
         const { data } = this.state;
         return (
             <div className="card-header">
-                {data.isDownloadActionDone ? <img id={data.id} className="mr-2 imgStyle" width="200" alt={data.description} src={data.src} /> : <Loading />}
+                {data.isDownloadActionDone ? (
+                    <img id={data.id} className="mr-2 imgStyle" width="200" alt={data.description} src={data.src} />
+                ) : (
+                    <div>
+                        <CircularProgress size={60} color="inherit" />
+                    </div>
+                )}
             </div>
         );
     }
