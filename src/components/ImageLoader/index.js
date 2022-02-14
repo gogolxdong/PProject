@@ -4,6 +4,8 @@ import { getAddresses } from "../../constants";
 import { Decentiktok } from "../../abi";
 import { useWeb3Context } from "../../hooks";
 import { BigNumber, ethers } from "ethers";
+import "./style.scss";
+
 const toBuffer = require("it-to-buffer");
 
 const { create } = require("ipfs-http-client");
@@ -47,7 +49,9 @@ class ImageLoader extends Component {
     render() {
         const { data } = this.state;
         return (
-            <div className="card-header">{data.isDownloadActionDone ? <img id={data.id} className="mr-2" width="200" alt={data.description} src={data.src} /> : <Loading />}</div>
+            <div className="card-header">
+                {data.isDownloadActionDone ? <img id={data.id} className="mr-2 imgStyle" width="200" alt={data.description} src={data.src} /> : <Loading />}
+            </div>
         );
     }
 }
