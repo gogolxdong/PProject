@@ -259,11 +259,11 @@ function App() {
         console.log("imageCount:", imageCount);
         for (var i = 1; i <= imageCount; i++) {
             var image = await decentiktok.getImage(i);
-            // var res = ipfs.cat(image.hash);
-            // var buffer = await toBuffer(res);
-            // var blob = new Blob([buffer]);
+            var res = ipfs.cat(image.hash);
+            var buffer = await toBuffer(res);
+            var blob = new Blob([buffer]);
             var clonedImage = Object.assign({}, image);
-            // clonedImage.src = URL.createObjectURL(blob);
+            clonedImage.src = URL.createObjectURL(blob);
             images.push(clonedImage);
         }
         setImages(images);
@@ -526,9 +526,17 @@ function App() {
                                     <ul id="imageList" className="list-group list-group-flush">
                                         {image.description && (
                                             <li className="list-group-item">
-                                                <a target="_blank" href={`ipfs://${image.hash}`} style={{ color: "white" }}>
-                                                    {image.description}
-                                                </a>
+                                                {window.navigator.brave ? (
+                                                    <a target="_blank" href={`ipfs://${image.hash}`} style={{ color: "white" }}>
+                                                        {" "}
+                                                        {image.description}
+                                                    </a>
+                                                ) : (
+                                                    <a target="_blank" href={`https://ipfs.io/ipfs/${image.hash}`} style={{ color: "white" }}>
+                                                        {" "}
+                                                        {image.description}
+                                                    </a>
+                                                )}
                                             </li>
                                         )}
                                         <li key={key} className="list-group-item py-2">
