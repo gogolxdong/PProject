@@ -136,7 +136,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
             }
             return true;
         }
-
         return false;
     };
 

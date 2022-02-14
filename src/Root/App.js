@@ -18,16 +18,14 @@ import Chip from "@material-ui/core/Chip";
 import { Grid, InputAdornment, OutlinedInput, Zoom, Slider, MenuItem } from "@material-ui/core";
 import "./App.css";
 import "./style.scss";
+import Loading from "../components/Loader";
+import ImageLoader from "../components/ImageLoader";
+import ipfs from "../components/ImageLoader";
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const toBuffer = require("it-to-buffer");
-const { create } = require("ipfs-http-client");
-const ipfs = create({
-    host: "ipfs.infura.io",
-    port: "5001",
-    protocol: "https",
-});
+
 function App() {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
@@ -256,14 +254,13 @@ function App() {
     const loadAccountDetails = createAsyncThunk("account/loadAccountDetails", async ({ networkID, provider, address }) => {
         let images = [];
         const imageCount = await decentiktok.imageCount();
-        console.log("imageCount:", imageCount);
         for (var i = 1; i <= imageCount; i++) {
             var image = await decentiktok.getImage(i);
-            var res = ipfs.cat(image.hash);
-            var buffer = await toBuffer(res);
-            var blob = new Blob([buffer]);
+            // var res = ipfs.cat(image.hash);
+            // var buffer = await toBuffer(res);
+            // var blob = new Blob([buffer]);
             var clonedImage = Object.assign({}, image);
-            clonedImage.src = URL.createObjectURL(blob);
+            // clonedImage.src = URL.createObjectURL(blob);
             images.push(clonedImage);
         }
         setImages(images);
@@ -336,6 +333,7 @@ function App() {
     }
 
     function connectWallet() {
+        // return <Loading />;
         return (
             <div className="referral-card-area">
                 <div className="referral-card-wallet-notification">
@@ -520,9 +518,7 @@ function App() {
                         {images.map((image, key) => {
                             return (
                                 <div className="card mb-4" key={key}>
-                                    <div className="card-header">
-                                        <img id={key} className="mr-2" width="200" alt={image.description} src={image.src} />
-                                    </div>
+                                    <ImageLoader image={image} />
                                     <ul id="imageList" className="list-group list-group-flush">
                                         {image.description && (
                                             <li className="list-group-item">
