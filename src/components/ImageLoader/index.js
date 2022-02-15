@@ -55,9 +55,7 @@ class ImageLoader extends Component {
                 {data.isDownloadActionDone ? (
                     <img id={data.id} className="mr-2 imgStyle" width="200" alt={data.description} src={data.src} />
                 ) : (
-                    <div>
-                        <CircularProgress size={60} color="inherit" />
-                    </div>
+                    <CircularProgress size={60} color="inherit" />
                 )}
             </div>
         );
