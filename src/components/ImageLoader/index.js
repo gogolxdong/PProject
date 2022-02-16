@@ -53,7 +53,7 @@ class ImageLoader extends Component {
         return (
             <div className="card-header">
                 {data.isDownloadActionDone ? (
-                    <img id={data.id} className="mr-2 imgStyle" width="200" alt={data.description} src={data.src} />
+                    <img id={data.id} className="mr-2 imgStyle" height="240" alt={data.description} src={data.src} />
                 ) : (
                     <CircularProgress size={60} color="inherit" />
                 )}
