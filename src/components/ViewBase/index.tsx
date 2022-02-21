@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     content: {
-        padding: theme.spacing(1),
+        padding: theme.spacing(0),
         transition: theme.transitions.create("margin", {
             easing: theme.transitions.easing.sharp,
             duration: TRANSITION_DURATION,

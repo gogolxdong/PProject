@@ -6,7 +6,7 @@ import os
 
 settings:
     bindAddr = "0.0.0.0"
-    port = Port(8081)
+    port = Port(80)
     staticDir = getCurrentDir() / "build"
 
 routes:

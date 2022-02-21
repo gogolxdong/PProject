@@ -1,4 +1,4 @@
 --hints:off
 --warnings:off
 --define:release
---gc:orc
+--threads:on

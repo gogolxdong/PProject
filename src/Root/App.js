@@ -1,4 +1,4 @@
-import { Component, useEffect, useState, useCallback, useMemo } from "react";
+import { Component, useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { NotFound } from "../views";
 import ViewBase from "../components/ViewBase";
 import { Route, Redirect, Switch } from "react-router-dom";
@@ -15,20 +15,32 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
-import { Grid, InputAdornment, OutlinedInput, Zoom, Slider, MenuItem } from "@material-ui/core";
-import "./App.css";
+import { Grid, InputAdornment, OutlinedInput, Zoom, Slider, MenuItem, ImageList } from "@material-ui/core";
+import "./App.scss";
 import "./style.scss";
 import Loading from "../components/Loader";
 import ImageLoader from "../components/ImageLoader";
-import ipfs from "../components/ImageLoader";
-
+// import ipfs from "../components/ImageLoader";
+import ImageListItem from "@material-ui/core/ImageListItem";
+import ImageListItemBar from "@material-ui/core/ImageListItemBar";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { wrap } from "module";
+import IconButton from "@material-ui/core/IconButton";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { unset } from "lodash";
 
 const toBuffer = require("it-to-buffer");
+const { create } = require("ipfs-http-client");
+export const ipfs = create({
+    host: "207.148.117.14",
+    port: "5001",
+    protocol: "http",
+});
 
 function App() {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
+    const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const theme = useMemo(
         () =>
             createTheme({
@@ -43,7 +55,7 @@ function App() {
                         // light: '#0066ff',
                         main: "#23262e",
                         dark: "#23262e",
-                        contrastText: "#777E90",
+                        contrastText: "white",
                     },
                     // Used by `getContrastText()` to maximize the contrast between
                     // the background and the text.
@@ -58,9 +70,10 @@ function App() {
     );
     const useStyles = makeStyles(() => ({
         root: {
-            background: "#141416",
             color: "white",
             flexGrow: 1,
+            display: "flex",
+            flexWrap: "wrap",
         },
         head: {
             height: "90px",
@@ -90,7 +103,7 @@ function App() {
             fontSize: 14,
         },
         dataWidth: {
-            width: "50vw",
+            width: isSmallScreen ? "100vw" : "61.8vw",
         },
         body: {
             justifyContent: "center",
@@ -156,7 +169,7 @@ function App() {
             display: "none",
         },
         chipBlue: {
-            backgroundColor: "rgba(55, 114, 255, 0.1)",
+            // backgroundColor: "rgba(55, 114, 255, 0.1)",
             fontSize: 16,
             padding: 5,
             borderRadius: 25,
@@ -209,7 +222,26 @@ function App() {
                 },
             },
         },
+        imageItem: {
+            "& .MuiImageListItem-root": {
+                height: "unset",
+            },
+        },
+        background: {
+            top: "0",
+            left: "0",
+            margin: "0px",
+            width: isSmallScreen ? "100vw" : "100%",
+            height: isSmallScreen ? "100vh" : "100%",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            webkitBackgroundSize: "cover",
+            oBackgroundSize: "cover",
+            backgroundPosition: "center 0",
+        },
     }));
+
+    const address = useAddress();
 
     const classes = useStyles();
     const { connect, disconnect, connected, web3Modal, web3, chainID, checkWrongNetwork, provider } = useWeb3Context();
@@ -256,14 +288,28 @@ function App() {
         const imageCount = await decentiktok.imageCount();
         for (var i = 1; i <= imageCount; i++) {
             var image = await decentiktok.getImage(i);
-            // var res = ipfs.cat(image.hash);
-            // var buffer = await toBuffer(res);
-            // var blob = new Blob([buffer]);
-            var clonedImage = Object.assign({}, image);
-            // clonedImage.src = URL.createObjectURL(blob);
-            images.push(clonedImage);
+            images.push({ ...image });
         }
-        setImages(images);
+        var a = Date.now();
+        var result = await Promise.all(
+            images.map(async image => {
+                if (image.src) {
+                    return image;
+                } else {
+                    var res = ipfs.cat(image.hash);
+                    var buffer = await toBuffer(res);
+                    var blob = new Blob([buffer]);
+                    image.src = URL.createObjectURL(blob);
+                    return image;
+                }
+            }),
+        );
+        var b = Date.now();
+        console.log((b - a) / 1000);
+        if (result.length && result[0].src) {
+            // console.log("setImages");
+            setImages(result);
+        }
     });
     const LoadImages = useCallback(
         loadProvider => {
@@ -271,14 +317,13 @@ function App() {
         },
         [connected],
     );
-    useEffect(() => {
+    useMemo(() => {
         getLongLat();
         if (connected && address) {
             LoadImages(provider);
         }
-    }, [connected]);
+    }, [connected, address]);
 
-    useMemo(() => {});
     function getLongLat() {
         if (!navigator.geolocation) {
             alert("<p>doesn't support geo location</p>");
@@ -311,8 +356,6 @@ function App() {
         }
         navigator.geolocation.getCurrentPosition(success, error, options);
     }
-
-    const address = useAddress();
 
     async function readAdd(event) {
         event.preventDefault();
@@ -349,9 +392,6 @@ function App() {
         return (
             <div className={classes.root}>
                 <div className={classes.dataWidth}>
-                    <Typography variant="h3" className={classes.title} gutterBottom>
-                        Share Image
-                    </Typography>
                     <form className={classes.form} noValidate autoComplete="off">
                         <TextField
                             type="file"
@@ -514,45 +554,36 @@ function App() {
         <ViewBase>
             <Switch>
                 <Route exact path="/lobby">
-                    <div className="image-view">
-                        {images.map((image, key) => {
-                            return (
-                                <div className="card mb-4" key={key}>
-                                    <ImageLoader image={image} />
-                                    <ul id="imageList" className="list-group list-group-flush">
-                                        {image.description && (
-                                            <li className="list-group-item">
-                                                {window.navigator.brave ? (
-                                                    <a target="_blank" href={`ipfs://${image.hash}`} style={{ color: "white" }}>
-                                                        {" "}
-                                                        {image.description}
-                                                    </a>
-                                                ) : (
-                                                    <a target="_blank" href={`https://ipfs.io/ipfs/${image.hash}`} style={{ color: "white" }}>
-                                                        {" "}
-                                                        {image.description}
-                                                    </a>
-                                                )}
-                                            </li>
-                                        )}
-                                        <li key={key} className="list-group-item py-2">
-                                            <small className="float-left mt-1 text-muted">TIPS: {ethers.utils.formatEther(image.tipAmount)} BNB</small>
-                                            <button
-                                                className="btn btn-link btn-sm float-right pt-0"
-                                                name={image.id}
-                                                onClick={event => {
-                                                    let tipAmount = ethers.utils.parseEther("0.001");
-                                                    decentiktok.tipImageOwner(event.target.name, { from: address, value: tipAmount });
-                                                }}
-                                            >
-                                                TIP
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            );
-                        })}
-                    </div>
+                    <ImageList cols={isSmallScreen ? 1 : 5}>
+                        {/* <ImageList cols={isSmallScreen ? 1 : 5} rowHeight={isSmallScreen ? "100vh" : 240}> */}
+                        {images.length &&
+                            images.map(image => {
+                                // return <ImageLoader key={image.id} image={image} isSmallScreen={isSmallScreen} contract={decentiktok} address={address} />;
+                                return image.src ? (
+                                    <ImageListItem key={image.id} style={isSmallScreen && { height: "100vh" }}>
+                                        <div className={classes.background} style={image && { backgroundImage: `url(${image.src})` }}></div>
+                                        <ImageListItemBar
+                                            title={image.description}
+                                            actionIcon={
+                                                <IconButton
+                                                    aria-label={`star ${image.id}`}
+                                                    onClick={event => {
+                                                        if (event.target.id) {
+                                                            let tipAmount = ethers.utils.parseEther("0.001");
+                                                            decentiktok.tipImageOwner(event.target.id, { from: address, value: tipAmount });
+                                                        }
+                                                    }}
+                                                >
+                                                    <StarBorderIcon id={image.id} />
+                                                </IconButton>
+                                            }
+                                        ></ImageListItemBar>
+                                    </ImageListItem>
+                                ) : (
+                                    <CircularProgress size={isSmallScreen ? 100 : 60} color="inherit" />
+                                );
+                            })}
+                    </ImageList>
                 </Route>
 
                 <Route exact path="/">
@@ -560,13 +591,13 @@ function App() {
                 </Route>
 
                 <Route path="/upload">
-                    <div className="referral-view">
-                        <Zoom in={true}>
-                            <div className="referral-card">
-                                <div className="referral-card-area">{!address ? connectWallet() : upload()}</div>
-                            </div>
-                        </Zoom>
-                    </div>
+                    {/* <div className="referral-view"> */}
+                    <Zoom in={true}>
+                        <div className="referral-card">
+                            <div className="referral-card-area">{!address ? connectWallet() : upload()}</div>
+                        </div>
+                    </Zoom>
+                    {/* </div> */}
                 </Route>
                 <Route component={NotFound} />
             </Switch>

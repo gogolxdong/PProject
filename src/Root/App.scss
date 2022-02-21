@@ -13,7 +13,10 @@
     justify-content: space-evenly;
     flex-wrap: wrap;
     color: white;
+    overflow: hidden;
+    text-align: center;
 }
+
 @media (prefers-reduced-motion: no-preference) {
     .App-logo {
         animation: App-logo-spin infinite 20s linear;
