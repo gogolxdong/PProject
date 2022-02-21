@@ -8,6 +8,7 @@ import "./style.scss";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import CardMedia from "@material-ui/core/CardMedia";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Box from "@material-ui/core/Box";
 import ImageList from "@material-ui/core/ImageList";
 import ImageListItem from "@material-ui/core/ImageListItem";
 import ImageListItemBar from "@material-ui/core/ImageListItemBar";
@@ -29,83 +30,59 @@ class ImageLoader extends Component {
         super(props);
         this.props.image.isDownloadActionDone = false;
         this.state = {
-            data: this.props.image,
+            image: this.props.image,
             isSmallScreen: this.props.isSmallScreen,
             contract: this.props.contract,
             address: this.props.address,
         };
     }
     async componentDidMount() {
-        const { data, isSmallScreen, contract, address } = this.state;
+        const { image, isSmallScreen, contract, address } = this.state;
+        var res = ipfs.cat(image.hash);
+        var buffer = await toBuffer(res);
+        var blob = new Blob([buffer]);
+        image.src = URL.createObjectURL(blob);
         var img = new Image();
         img.onload = () => {
-            data.isDownloadActionDone = true;
-            this.setState({ data });
+            image.isDownloadActionDone = true;
+            this.setState({ image: image });
         };
         img.onerror = event => {
-            data.isDownloadActionDone = true;
-            this.setState({ data });
+            image.isDownloadActionDone = true;
+            this.setState({ image: image });
         };
-        console.log("data:", data.src);
-        img.src = data.src;
+        img.src = image.src;
     }
     async componentDidUpdate() {}
+
     render() {
-        const { data, isSmallScreen, contract, address } = this.state;
+        const { image, isSmallScreen, address } = this.state;
+
         return (
-            <div>
-                {data.isDownloadActionDone && (
-                    <ImageListItem
-                        key={data.id}
+            <>
+                {image.isDownloadActionDone && (
+                    <div
                         style={{
                             top: "0",
                             left: "0",
                             margin: "0px",
-                            width: "100%",
-                            height: "100%",
-                            background: `url(${data.src}) 0% 0% / cover no-repeat fixed`,
+                            width: isSmallScreen ? "100vw" : "100%",
+                            height: isSmallScreen ? "100vh" : "100%",
+                            backgroundRepeat: "no-repeat",
+                            backgroundSize: "cover",
+                            webkitBackgroundSize: "cover",
+                            oBackgroundSize: "cover",
+                            backgroundPosition: "center 0",
+                            backgroundImage: `url(${image.src})`,
                         }}
-                    >
-                        <ImageListItemBar
-                            title={data.description}
-                            actionIcon={
-                                <IconButton
-                                    id={data.id}
-                                    aria-label={`star ${data.id}`}
-                                    onClick={event => {
-                                        if (event.target.id) {
-                                            let tipAmount = ethers.utils.parseEther("0.001");
-                                            console.log(event.target);
-                                            contract.tipImageOwner(event.target.id, { from: address, value: tipAmount });
-                                        }
-                                    }}
-                                >
-                                    <StarBorderIcon />
-                                </IconButton>
-                            }
-                        >
-                            {/* <div id="imageList" className="list-group list-group-flush">
-                                {data.description && (
-                                    <div className="list-group-item">
-                                        {window.navigator.brave ? (
-                                            <a target="_blank" href={`ipfs://${data.hash}`} style={{ color: "white" }}>
-                                                {" "}
-                                                {data.description}
-                                            </a>
-                                        ) : (
-                                            <a target="_blank" href={`https://ipfs.io/ipfs/${data.hash}`} style={{ color: "white" }}>
-                                                {" "}
-                                                {data.description}
-                                            </a>
-                                        )}
-                                    </div>
-                                )}
-                            </div> */}
-                        </ImageListItemBar>
-                    </ImageListItem>
+                    ></div>
                 )}
-                {!data.isDownloadActionDone && <CircularProgress size={this.state.isSmallScreen ? 100 : 60} color="inherit" />}
-            </div>
+                {!image.isDownloadActionDone && (
+                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+                        <CircularProgress color="inherit" size={isSmallScreen ? 100 : 60} />
+                    </Box>
+                )}
+            </>
         );
     }
 }

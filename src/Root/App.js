@@ -241,6 +241,8 @@ function App() {
         },
     }));
 
+    const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
+
     const address = useAddress();
 
     const classes = useStyles();
@@ -257,6 +259,7 @@ function App() {
     var [stakeAmount, setAmount] = useState();
     var [json, setJson] = useState();
     var [images, setImages] = useState([]);
+    var [imageCount, setImageCount] = useState(0);
 
     function onFormChange() {
         const data = {
@@ -286,29 +289,22 @@ function App() {
     const loadAccountDetails = createAsyncThunk("account/loadAccountDetails", async ({ networkID, provider, address }) => {
         let images = [];
         const imageCount = await decentiktok.imageCount();
-        for (var i = 1; i <= imageCount; i++) {
-            var image = await decentiktok.getImage(i);
-            images.push({ ...image });
-        }
-        var a = Date.now();
-        var result = await Promise.all(
-            images.map(async image => {
-                if (image.src) {
-                    return image;
-                } else {
-                    var res = ipfs.cat(image.hash);
-                    var buffer = await toBuffer(res);
-                    var blob = new Blob([buffer]);
-                    image.src = URL.createObjectURL(blob);
-                    return image;
-                }
+        images = await Promise.all(
+            range(1, imageCount, 1).map(async i => {
+                var image = await decentiktok.getImage(i);
+                var cloned = { ...image, src: "" };
+                // var res = ipfs.cat(image.hash);
+                // var buffer = await toBuffer(res);
+                // var blob = new Blob([buffer]);
+                // cloned.src = URL.createObjectURL(blob);
+                return cloned;
+                // console.log("cloned:", cloned);
+                // images.push(cloned);
             }),
         );
-        var b = Date.now();
-        console.log((b - a) / 1000);
-        if (result.length && result[0].src) {
+        if (images.length) {
             // console.log("setImages");
-            setImages(result);
+            setImages(images);
         }
     });
     const LoadImages = useCallback(
@@ -550,39 +546,48 @@ function App() {
             </div>
         );
     }
+
     return (
         <ViewBase>
             <Switch>
                 <Route exact path="/lobby">
                     <ImageList cols={isSmallScreen ? 1 : 5}>
                         {/* <ImageList cols={isSmallScreen ? 1 : 5} rowHeight={isSmallScreen ? "100vh" : 240}> */}
-                        {images.length &&
-                            images.map(image => {
-                                // return <ImageLoader key={image.id} image={image} isSmallScreen={isSmallScreen} contract={decentiktok} address={address} />;
-                                return image.src ? (
-                                    <ImageListItem key={image.id} style={isSmallScreen && { height: "100vh" }}>
-                                        <div className={classes.background} style={image && { backgroundImage: `url(${image.src})` }}></div>
-                                        <ImageListItemBar
-                                            title={image.description}
-                                            actionIcon={
-                                                <IconButton
-                                                    aria-label={`star ${image.id}`}
-                                                    onClick={event => {
-                                                        if (event.target.id) {
-                                                            let tipAmount = ethers.utils.parseEther("0.001");
-                                                            decentiktok.tipImageOwner(event.target.id, { from: address, value: tipAmount });
-                                                        }
-                                                    }}
-                                                >
-                                                    <StarBorderIcon id={image.id} />
-                                                </IconButton>
-                                            }
-                                        ></ImageListItemBar>
-                                    </ImageListItem>
-                                ) : (
-                                    <CircularProgress size={isSmallScreen ? 100 : 60} color="inherit" />
-                                );
-                            })}
+                        {images.map(image => {
+                            return (
+                                <ImageListItem key={image.id} style={isSmallScreen ? { height: "100vh" } : {}}>
+                                    <ImageLoader key={image.id} image={image} isSmallScreen={isSmallScreen} contract={decentiktok} address={address} />
+                                    <ImageListItemBar
+                                        title={image.description}
+                                        actionIcon={
+                                            <IconButton
+                                                id={image.id}
+                                                aria-label={`star ${image.id}`}
+                                                onClick={event => {
+                                                    if (event.target.id) {
+                                                        let tipAmount = ethers.utils.parseEther("0.001");
+                                                        decentiktok.tipImageOwner(event.target.id, { from: address, value: tipAmount });
+                                                    }
+                                                }}
+                                            >
+                                                <StarBorderIcon />
+                                            </IconButton>
+                                            // {window.navigator.brave ? (
+                                            //     <a target="_blank" href={`ipfs://${data.hash}`} style={{ color: "white" }}>
+                                            //         {" "}
+                                            //         {data.description}
+                                            //     </a>
+                                            // ) : (
+                                            //     <a target="_blank" href={`https://ipfs.io/ipfs/${data.hash}`} style={{ color: "white" }}>
+                                            //         {" "}
+                                            //         {data.description}
+                                            //     </a>
+                                            // )}
+                                        }
+                                    ></ImageListItemBar>
+                                </ImageListItem>
+                            );
+                        })}
                     </ImageList>
                 </Route>
 
