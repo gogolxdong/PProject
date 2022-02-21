@@ -591,13 +591,13 @@ function App() {
                 </Route>
 
                 <Route path="/upload">
-                    {/* <div className="referral-view"> */}
-                    <Zoom in={true}>
-                        <div className="referral-card">
-                            <div className="referral-card-area">{!address ? connectWallet() : upload()}</div>
-                        </div>
-                    </Zoom>
-                    {/* </div> */}
+                    <div className="referral-view">
+                        <Zoom in={true}>
+                            <div className="referral-card">
+                                <div className="referral-card-area">{!address ? connectWallet() : upload()}</div>
+                            </div>
+                        </Zoom>
+                    </div>
                 </Route>
                 <Route component={NotFound} />
             </Switch>
