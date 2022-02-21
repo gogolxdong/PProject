@@ -29,6 +29,7 @@ import IconButton from "@material-ui/core/IconButton";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { unset } from "lodash";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 
 const toBuffer = require("it-to-buffer");
 const { create } = require("ipfs-http-client");
@@ -551,14 +552,23 @@ function App() {
         <ViewBase>
             <Switch>
                 <Route exact path="/lobby">
-                    <ImageList cols={isSmallScreen ? 1 : 5}>
-                        {/* <ImageList cols={isSmallScreen ? 1 : 5} rowHeight={isSmallScreen ? "100vh" : 240}> */}
+                    <ImageList cols={isSmallScreen ? 1 : 5} rowHeight={isSmallScreen ? "100vh" : 240}>
                         {images.map(image => {
                             return (
                                 <ImageListItem key={image.id} style={isSmallScreen ? { height: "100vh" } : {}}>
                                     <ImageLoader key={image.id} image={image} isSmallScreen={isSmallScreen} contract={decentiktok} address={address} />
                                     <ImageListItemBar
-                                        title={image.description}
+                                        title={
+                                            window.navigator.brave ? (
+                                                <a target="_blank" href={`ipfs://${image.hash}`} style={{ color: "white" }}>
+                                                    {image.description}
+                                                </a>
+                                            ) : (
+                                                <a target="_blank" href={`https://ipfs.io/ipfs/${image.hash}`} style={{ color: "white" }}>
+                                                    {image.description}
+                                                </a>
+                                            )
+                                        }
                                         actionIcon={
                                             <IconButton
                                                 id={image.id}
@@ -571,20 +581,11 @@ function App() {
                                                 }}
                                             >
                                                 <StarBorderIcon />
+                                                <FavoriteIcon />
                                             </IconButton>
-                                            // {window.navigator.brave ? (
-                                            //     <a target="_blank" href={`ipfs://${data.hash}`} style={{ color: "white" }}>
-                                            //         {" "}
-                                            //         {data.description}
-                                            //     </a>
-                                            // ) : (
-                                            //     <a target="_blank" href={`https://ipfs.io/ipfs/${data.hash}`} style={{ color: "white" }}>
-                                            //         {" "}
-                                            //         {data.description}
-                                            //     </a>
-                                            // )}
                                         }
                                     ></ImageListItemBar>
+                                    <div></div>
                                 </ImageListItem>
                             );
                         })}
