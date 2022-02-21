@@ -33,9 +33,9 @@ import { unset } from "lodash";
 const toBuffer = require("it-to-buffer");
 const { create } = require("ipfs-http-client");
 export const ipfs = create({
-    host: "207.148.117.14",
+    host: "ipfs.infura.io",
     port: "5001",
-    protocol: "http",
+    protocol: "https",
 });
 
 function App() {

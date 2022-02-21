@@ -19,9 +19,9 @@ const toBuffer = require("it-to-buffer");
 
 const { create } = require("ipfs-http-client");
 export const ipfs = create({
-    host: "207.148.117.14",
+    host: "ipfs.infura.io",
     port: "5001",
-    protocol: "http",
+    protocol: "https",
 });
 
 class ImageLoader extends Component {
