@@ -30,6 +30,8 @@ import StarBorderIcon from "@material-ui/icons/StarBorder";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { unset } from "lodash";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
 
 const toBuffer = require("it-to-buffer");
 const { create } = require("ipfs-http-client");
@@ -287,13 +289,25 @@ function App() {
         [connected],
     );
 
+    function calcDistance(image, longitude, latitude) {
+        var imageLongitude = parseFloat(image.longitude);
+        var imageLatitude = parseFloat(image.latitude);
+        console.log(imageLongitude, imageLatitude, longitude, latitude);
+        var absoluteLongitude = Math.abs(imageLongitude - parseFloat(longitude));
+        var absoluteLatitude = Math.abs(imageLatitude - parseFloat(latitude));
+        console.log(absoluteLongitude, absoluteLatitude);
+        var distance = Math.sqrt(Math.pow(absoluteLongitude, 2) + Math.pow(absoluteLatitude, 2));
+        console.log(distance);
+        return distance;
+    }
     const loadAccountDetails = createAsyncThunk("account/loadAccountDetails", async ({ networkID, provider, address }) => {
         let images = [];
         const imageCount = await decentiktok.imageCount();
         images = await Promise.all(
             range(1, imageCount, 1).map(async i => {
                 var image = await decentiktok.getImage(i);
-                var cloned = { ...image, src: "" };
+                var distance = calcDistance(image, longitude, latitude);
+                var cloned = { ...image, src: "", distance: distance };
                 // var res = ipfs.cat(image.hash);
                 // var buffer = await toBuffer(res);
                 // var blob = new Blob([buffer]);
@@ -305,6 +319,8 @@ function App() {
         );
         if (images.length) {
             // console.log("setImages");
+            images.sort((a, b) => a.distance - b.distance);
+            console.log(images);
             setImages(images);
         }
     });
@@ -552,7 +568,7 @@ function App() {
         <ViewBase>
             <Switch>
                 <Route exact path="/lobby">
-                    <ImageList cols={isSmallScreen ? 1 : 5} rowHeight={isSmallScreen ? "100vh" : 240}>
+                    <ImageList cols={isSmallScreen ? 1 : 5} rowHeight={isSmallScreen ? "100vh" : 320}>
                         {images.map(image => {
                             return (
                                 <ImageListItem key={image.id} style={isSmallScreen ? { height: "100vh" } : {}}>
@@ -569,19 +585,31 @@ function App() {
                                                 </a>
                                             )
                                         }
+                                        // subtitle={
+                                        //     <IconButton
+                                        //         id={image.id.toNumber()}
+                                        //         aria-label={`star ${image.id}`}
+                                        //         onClick={event => {
+                                        //             var distance = calcDistance(images[image.id - 1], longitude, latitude);
+                                        //             console.log(image.id, distance);
+                                        //         }}
+                                        //     >
+                                        //         <LocationOnIcon />
+                                        //         <span>{image.distance}</span>
+                                        //     </IconButton>
+                                        // }
                                         actionIcon={
                                             <IconButton
-                                                id={image.id}
+                                                id={image.id.toNumber()}
                                                 aria-label={`star ${image.id}`}
                                                 onClick={event => {
-                                                    if (event.target.id) {
-                                                        let tipAmount = ethers.utils.parseEther("0.001");
-                                                        decentiktok.tipImageOwner(event.target.id, { from: address, value: tipAmount });
-                                                    }
+                                                    console.log(image.id.toNumber());
+                                                    let tipAmount = ethers.utils.parseEther("0.001");
+                                                    decentiktok.tipImageOwner(image.id.toNumber(), { from: address, value: tipAmount });
                                                 }}
                                             >
-                                                <StarBorderIcon />
-                                                <FavoriteIcon />
+                                                {/* <StarBorderIcon /> */}
+                                                <FavoriteBorderIcon />
                                             </IconButton>
                                         }
                                     ></ImageListItemBar>
