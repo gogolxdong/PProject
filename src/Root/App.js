@@ -585,23 +585,26 @@ function App() {
                                                 </a>
                                             )
                                         }
-                                        // subtitle={
-                                        //     <IconButton
-                                        //         id={image.id.toNumber()}
-                                        //         aria-label={`star ${image.id}`}
-                                        //         onClick={event => {
-                                        //             var distance = calcDistance(images[image.id - 1], longitude, latitude);
-                                        //             console.log(image.id, distance);
-                                        //         }}
-                                        //     >
-                                        //         <LocationOnIcon />
-                                        //         <span>{image.distance}</span>
-                                        //     </IconButton>
-                                        // }
+                                        subtitle={
+                                            image.distance ? (
+                                                <IconButton
+                                                    style={{ fontSize: "unset", color: "white" }}
+                                                    // aria-label={`star ${image.id}`}
+                                                    onClick={event => {
+                                                        var distance = calcDistance(images[image.id.toNumber() - 1], longitude, latitude);
+                                                        console.log(image.id, distance);
+                                                    }}
+                                                >
+                                                    <LocationOnIcon />
+                                                    <span>{image.distance}</span>
+                                                </IconButton>
+                                            ) : (
+                                                <></>
+                                            )
+                                        }
                                         actionIcon={
                                             <IconButton
-                                                id={image.id.toNumber()}
-                                                aria-label={`star ${image.id}`}
+                                                // aria-label={`star ${image.id}`}
                                                 onClick={event => {
                                                     console.log(image.id.toNumber());
                                                     let tipAmount = ethers.utils.parseEther("0.001");
