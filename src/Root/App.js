@@ -32,6 +32,7 @@ import { unset } from "lodash";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
+// import google from "./googleMap";
 
 const toBuffer = require("it-to-buffer");
 const { create } = require("ipfs-http-client");
@@ -262,7 +263,7 @@ function App() {
     var [stakeAmount, setAmount] = useState();
     var [json, setJson] = useState();
     var [images, setImages] = useState([]);
-    var [imageCount, setImageCount] = useState(0);
+    var [location, setLocation] = useState("");
 
     function onFormChange() {
         const data = {
@@ -309,13 +310,7 @@ function App() {
                 var lng = parseFloat(image.longitude);
                 var distance = calcDistance(lat, lng, parseFloat(latitude), parseFloat(longitude));
                 var cloned = { ...image, src: "", distance: distance };
-                // var res = ipfs.cat(image.hash);
-                // var buffer = await toBuffer(res);
-                // var blob = new Blob([buffer]);
-                // cloned.src = URL.createObjectURL(blob);
                 return cloned;
-                // console.log("cloned:", cloned);
-                // images.push(cloned);
             }),
         );
         if (images.length) {
@@ -338,30 +333,17 @@ function App() {
         }
     }, [connected, address]);
 
-    const geocoder = new google.maps.Geocoder();
-
-    const getLocation = useMemo(() => {
-        if (geocoder && geocoder.geocode && latitude && longitude) {
+    useMemo(() => {
+        if (latitude && longitude) {
             var latlng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
             console.log("latlng:", latlng);
-            try {
-                geocoder
-                    .geocode({ location: latlng })
-                    .then(response => {
-                        if (response.results[0]) {
-                            var address = response.results[0].formatted_address;
-                            console.log(address);
-                            return address;
-                        }
-                    })
-                    .catch(e => window.alert("Geocoder failed due to: " + e));
-            } catch (error) {
-                console.log(error);
-            }
+            fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`)
+                .then(response => response.json())
+                .then(data => setLocation(data.display_name));
         }
     }, [latitude, longitude]);
 
-    console.log("getLocation:", getLocation);
+    // console.log(location);
     function getLongLat() {
         if (!navigator.geolocation) {
             alert("<p>doesn't support geo location</p>");
@@ -414,7 +396,6 @@ function App() {
     }
 
     function connectWallet() {
-        // return <Loading />;
         return (
             <div className="referral-card-area">
                 <div className="referral-card-wallet-notification">
@@ -482,6 +463,18 @@ function App() {
                             margin="normal"
                             InputLabelProps={{ className: classes.inputColor }}
                             value={latitude}
+                            required
+                            fullWidth
+                        />
+                        <br />
+                        <TextField
+                            id="location"
+                            color="white"
+                            size="medium"
+                            variant="outlined"
+                            margin="normal"
+                            InputLabelProps={{ className: classes.inputColor }}
+                            value={location}
                             required
                             fullWidth
                         />
