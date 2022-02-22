@@ -21,7 +21,7 @@
     "noEmit": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["./index.d.ts", "src", "babel.config.js"],
+  "include": ["./index.d.ts", "src", "babel.config.js", "public/googleMap.js"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "node_modules", "vendor", "public","contracts","hardhat.config.js"],
   "compileOnSave": false
 }

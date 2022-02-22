@@ -288,25 +288,26 @@ function App() {
         },
         [connected],
     );
-
-    function calcDistance(image, longitude, latitude) {
-        var imageLongitude = parseFloat(image.longitude);
-        var imageLatitude = parseFloat(image.latitude);
-        console.log(imageLongitude, imageLatitude, longitude, latitude);
-        var absoluteLongitude = Math.abs(imageLongitude - parseFloat(longitude));
-        var absoluteLatitude = Math.abs(imageLatitude - parseFloat(latitude));
-        console.log(absoluteLongitude, absoluteLatitude);
-        var distance = Math.sqrt(Math.pow(absoluteLongitude, 2) + Math.pow(absoluteLatitude, 2));
-        console.log(distance);
-        return distance;
+    function calcDistance(lat1, lng1, lat2, lng2) {
+        const radLat1 = (lat1 * Math.PI) / 180.0;
+        const radLat2 = (lat2 * Math.PI) / 180.0;
+        const a = radLat1 - radLat2;
+        const b = (lng1 * Math.PI) / 180.0 - (lng2 * Math.PI) / 180.0;
+        let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+        s = s * 6378.137;
+        s = Math.round(s * 10000) / 10000;
+        return s;
     }
+
     const loadAccountDetails = createAsyncThunk("account/loadAccountDetails", async ({ networkID, provider, address }) => {
         let images = [];
         const imageCount = await decentiktok.imageCount();
         images = await Promise.all(
             range(1, imageCount, 1).map(async i => {
                 var image = await decentiktok.getImage(i);
-                var distance = calcDistance(image, longitude, latitude);
+                var lat = parseFloat(image.latitude);
+                var lng = parseFloat(image.longitude);
+                var distance = calcDistance(lat, lng, parseFloat(latitude), parseFloat(longitude));
                 var cloned = { ...image, src: "", distance: distance };
                 // var res = ipfs.cat(image.hash);
                 // var buffer = await toBuffer(res);
@@ -337,6 +338,30 @@ function App() {
         }
     }, [connected, address]);
 
+    const geocoder = new google.maps.Geocoder();
+
+    const getLocation = useMemo(() => {
+        if (geocoder && geocoder.geocode && latitude && longitude) {
+            var latlng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+            console.log("latlng:", latlng);
+            try {
+                geocoder
+                    .geocode({ location: latlng })
+                    .then(response => {
+                        if (response.results[0]) {
+                            var address = response.results[0].formatted_address;
+                            console.log(address);
+                            return address;
+                        }
+                    })
+                    .catch(e => window.alert("Geocoder failed due to: " + e));
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }, [latitude, longitude]);
+
+    console.log("getLocation:", getLocation);
     function getLongLat() {
         if (!navigator.geolocation) {
             alert("<p>doesn't support geo location</p>");
@@ -589,7 +614,6 @@ function App() {
                                             image.distance ? (
                                                 <IconButton
                                                     style={{ fontSize: "unset", color: "white" }}
-                                                    // aria-label={`star ${image.id}`}
                                                     onClick={event => {
                                                         var distance = calcDistance(images[image.id.toNumber() - 1], longitude, latitude);
                                                         console.log(image.id, distance);
