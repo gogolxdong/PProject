@@ -339,11 +339,24 @@ function App() {
             console.log("latlng:", latlng);
             fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`)
                 .then(response => response.json())
-                .then(data => setLocation(data.display_name));
+                .then(data => {
+                    var address = data.display_name.split(",").reverse();
+                    delete address[1];
+                    address = address.map(e => e.trim());
+
+                    var firstAddress = address[0];
+                    var firstcharCodeAt = firstAddress.charCodeAt(0);
+                    var firstcharAt = firstAddress.charAt(0);
+                    if (firstcharCodeAt < 256) {
+                        address = address.join(",");
+                    } else {
+                        address = address.join("");
+                    }
+                    setLocation(address);
+                });
         }
     }, [latitude, longitude]);
 
-    // console.log(location);
     function getLongLat() {
         if (!navigator.geolocation) {
             alert("<p>doesn't support geo location</p>");
