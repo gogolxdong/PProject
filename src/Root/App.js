@@ -1,5 +1,4 @@
 import { Component, useEffect, useState, useCallback, useMemo, useRef } from "react";
-import { NotFound } from "../views";
 import ViewBase from "../components/ViewBase";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { useWeb3Context } from "../hooks";
@@ -18,21 +17,8 @@ import Chip from "@material-ui/core/Chip";
 import { Grid, InputAdornment, OutlinedInput, Zoom, Slider, MenuItem, ImageList } from "@material-ui/core";
 import "./App.scss";
 import "./style.scss";
-import Loading from "../components/Loader";
-import ImageLoader from "../components/ImageLoader";
-// import ipfs from "../components/ImageLoader";
-import ImageListItem from "@material-ui/core/ImageListItem";
-import ImageListItemBar from "@material-ui/core/ImageListItemBar";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { wrap } from "module";
-import IconButton from "@material-ui/core/IconButton";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { unset } from "lodash";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-// import google from "./googleMap";
+import { NotFound, IDO } from "../views";
 
 const toBuffer = require("it-to-buffer");
 const { create } = require("ipfs-http-client");
@@ -280,7 +266,6 @@ function App() {
     const addresses = getAddresses(chainID);
     const decentiktok = new ethers.Contract(addresses.ADDRESS, Decentiktok, provider.getSigner());
 
-    // const decentiktok = new web3.eth.Contract(Decentiktok, addresses.ADDRESS);
     const isAppLoaded = useSelector(state => !Boolean(state.app.marketPrice));
 
     const loadApp = useCallback(
@@ -289,36 +274,9 @@ function App() {
         },
         [connected],
     );
-    function calcDistance(lat1, lng1, lat2, lng2) {
-        const radLat1 = (lat1 * Math.PI) / 180.0;
-        const radLat2 = (lat2 * Math.PI) / 180.0;
-        const a = radLat1 - radLat2;
-        const b = (lng1 * Math.PI) / 180.0 - (lng2 * Math.PI) / 180.0;
-        let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
-        s = s * 6378.137;
-        s = Math.round(s * 10000) / 10000;
-        return s;
-    }
 
     const loadAccountDetails = createAsyncThunk("account/loadAccountDetails", async ({ networkID, provider, address }) => {
         let images = [];
-        const imageCount = await decentiktok.imageCount();
-        images = await Promise.all(
-            range(1, imageCount, 1).map(async i => {
-                var image = await decentiktok.getImage(i);
-                var lat = parseFloat(image.latitude);
-                var lng = parseFloat(image.longitude);
-                var distance = calcDistance(lat, lng, parseFloat(latitude), parseFloat(longitude));
-                var cloned = { ...image, src: "", distance: distance };
-                return cloned;
-            }),
-        );
-        if (images.length) {
-            // console.log("setImages");
-            images.sort((a, b) => a.distance - b.distance);
-            console.log(images);
-            setImages(images);
-        }
     });
     const LoadImages = useCallback(
         loadProvider => {
@@ -326,270 +284,19 @@ function App() {
         },
         [connected],
     );
-    useMemo(() => {
-        getLongLat();
-        if (connected && address) {
-            LoadImages(provider);
-        }
-    }, [connected, address]);
-
-    useMemo(() => {
-        if (latitude && longitude) {
-            var latlng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
-            console.log("latlng:", latlng);
-            fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`)
-                .then(response => response.json())
-                .then(data => {
-                    var address = data.display_name.split(",").reverse();
-                    delete address[1];
-                    address = address.map(e => e.trim());
-
-                    var firstAddress = address[0];
-                    var firstcharCodeAt = firstAddress.charCodeAt(0);
-                    var firstcharAt = firstAddress.charAt(0);
-                    if (firstcharCodeAt < 256) {
-                        address = address.join(",");
-                    } else {
-                        address = address.join("");
-                    }
-                    setLocation(address);
-                });
-        }
-    }, [latitude, longitude]);
-
-    function getLongLat() {
-        if (!navigator.geolocation) {
-            alert("<p>doesn't support geo location</p>");
-            return;
-        }
-        function success(position) {
-            setLongitude(String(position.coords.longitude));
-            setLatitude(String(position.coords.latitude));
-        }
-        var options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0,
-        };
-        function error(err) {
-            switch (err.code) {
-                case 1:
-                    alert("PERMISSION_DENIED");
-                    break;
-                case 2:
-                    alert("POSITION_UNAVAILABLE");
-                    break;
-                case 3:
-                    alert("TIMEOUT");
-                    break;
-                default:
-                    alert("UNKNOWN_ERROR");
-                    break;
-            }
-        }
-        navigator.geolocation.getCurrentPosition(success, error, options);
-    }
-
-    async function readAdd(event) {
-        event.preventDefault();
-        const file = event.target.files?.item(0);
-        const reader = new window.FileReader();
-        reader.readAsArrayBuffer(file);
-        reader.onloadend = async () => {
-            var arrayBuffer = reader.result;
-            var result = await ipfs.add(arrayBuffer);
-            setImageHash(result.path);
-        };
-        const preview = document.getElementById("preview");
-        preview.onload = function (e) {
-            URL.revokeObjectURL(preview.src);
-        };
-        preview.src = URL.createObjectURL(file);
-        preview.alt = "preview";
-    }
 
     function connectWallet() {
         return (
-            <div className="referral-card-area">
-                <div className="referral-card-wallet-notification">
-                    <div className="referral-card-wallet-connect-btn" onClick={connect}>
-                        <p>Connect Wallet</p>
+            <div className="referral-view">
+                <div className="referral-card">
+                    <div className="referral-card-area">
+                        <div className="referral-card-wallet-notification">
+                            <div className="referral-card-wallet-connect-btn" onClick={connect}>
+                                <p>Connect Wallet</p>
+                            </div>
+                            <p className="referral-card-wallet-desc-text">Connect your wallet!</p>
+                        </div>
                     </div>
-                    <p className="referral-card-wallet-desc-text">Connect your wallet!</p>
-                </div>
-            </div>
-        );
-    }
-    function upload() {
-        return (
-            <div className={classes.root}>
-                <div className={classes.dataWidth}>
-                    <form className={classes.form} noValidate autoComplete="off">
-                        <TextField
-                            type="file"
-                            accept=".jpg, .jpeg, .png, .bmp, .gif"
-                            id="outlined-basic"
-                            color="white"
-                            size="medium"
-                            variant="outlined"
-                            margin="normal"
-                            InputLabelProps={{ className: classes.inputColor }}
-                            onChange={readAdd}
-                            fullWidth
-                        />
-                        <br />
-                        <TextField
-                            color="white"
-                            size="medium"
-                            label="Image Description"
-                            variant="outlined"
-                            margin="normal"
-                            InputLabelProps={{ className: classes.inputColor }}
-                            id="outlined-basic"
-                            required
-                            fullWidth
-                            value={description}
-                            onChange={e => {
-                                setDescription(e.target.value);
-                                onFormChange();
-                            }}
-                        />
-                        <br />
-                        <OutlinedInput
-                            id="outlined-basic"
-                            color="white"
-                            size="medium"
-                            variant="outlined"
-                            margin="normal"
-                            InputLabelProps={{ className: classes.inputColor }}
-                            value={longitude}
-                            required
-                            fullWidth
-                            onChange={e => setLongitude(e.target.value)}
-                        />
-                        <br />
-                        <TextField
-                            id="latitude"
-                            color="white"
-                            size="medium"
-                            variant="outlined"
-                            margin="normal"
-                            InputLabelProps={{ className: classes.inputColor }}
-                            value={latitude}
-                            required
-                            fullWidth
-                        />
-                        <br />
-                        <TextField
-                            id="location"
-                            color="white"
-                            size="medium"
-                            variant="outlined"
-                            margin="normal"
-                            InputLabelProps={{ className: classes.inputColor }}
-                            value={location}
-                            required
-                            fullWidth
-                        />
-                        <br />
-                        <TextField
-                            id="gender"
-                            select
-                            list="genderlist"
-                            color="white"
-                            size="medium"
-                            label="Gender"
-                            variant="outlined"
-                            margin="normal"
-                            InputLabelProps={{ className: classes.inputColor }}
-                            value={gender}
-                            required
-                            onChange={e => {
-                                setGender(e.target.value);
-                                onFormChange();
-                            }}
-                            fullWidth
-                        >
-                            <MenuItem value={"Male"}>Male</MenuItem>
-                            <MenuItem value={"Female"}>Female</MenuItem>
-                        </TextField>
-
-                        <br />
-                        <TextField
-                            id="stakeAmount"
-                            color="white"
-                            size="medium"
-                            label="Stake Amount"
-                            variant="outlined"
-                            margin="normal"
-                            InputLabelProps={{ className: classes.inputColor }}
-                            value={stakeAmount}
-                            required
-                            onChange={e => {
-                                setAmount(e.target.value);
-                                onFormChange();
-                            }}
-                            fullWidth
-                        />
-                        <br />
-                        <TextField
-                            id="stakeTime"
-                            select
-                            color="white"
-                            size="medium"
-                            label="Stake Time"
-                            variant="outlined"
-                            margin="normal"
-                            InputLabelProps={{ className: classes.inputColor }}
-                            value={stakeTime}
-                            required
-                            autocomplete="off"
-                            list="stakeTimeList"
-                            onChange={e => {
-                                setTime(e.target.value);
-                                onFormChange();
-                            }}
-                            fullWidth
-                        >
-                            <MenuItem value={"30 days"}>30 days</MenuItem>
-                            <MenuItem value={"60 days"}>60 days</MenuItem>
-                            <MenuItem value={"180 days"}>180 days</MenuItem>
-                        </TextField>
-
-                        <br />
-                        <Chip
-                            className={classes.chipBlue}
-                            label="Upload"
-                            onClick={async () => {
-                                decentiktok.on("ImageCreated", result => {
-                                    if (result) {
-                                        console.log("transactionHash:" + result.transactionHash);
-                                        console.log("blockNumber:" + result.blockNumber);
-                                    }
-                                });
-                                var days = Number(stakeTime.split(" ")[0]) * 86400;
-                                var time = Math.round(Date.now() / 1000) + days;
-                                var result = await decentiktok.uploadImage(json.longitude, json.latitude, json.imageHash, json.description, json.gender, json.stakeAmount, time);
-                                var tx = await result.wait();
-                                const res = ipfs.cat(json.imageHash);
-                                const buffer = await toBuffer(res);
-                                const blob = new Blob([buffer]);
-                                const added = document.getElementById("added");
-                                if (added) {
-                                    added.src = URL.createObjectURL(blob);
-                                    added.alt = "added";
-                                    added.onload = function (e) {
-                                        URL.revokeObjectURL(added.src);
-                                    };
-                                }
-                                LoadImages(provider);
-                            }}
-                        />
-                    </form>
-
-                    <p>&nbsp;</p>
-                    <img id="preview" width="50%" style={{ color: "white" }}></img>
-                    <img id="added" width="50%" style={{ color: "white" }}></img>
                 </div>
             </div>
         );
@@ -598,74 +305,11 @@ function App() {
     return (
         <ViewBase>
             <Switch>
-                <Route exact path="/lobby">
-                    <ImageList cols={isSmallScreen ? 1 : 5} rowHeight={isSmallScreen ? "100vh" : 320}>
-                        {images.map(image => {
-                            return (
-                                <ImageListItem key={image.id} style={isSmallScreen ? { height: "100vh" } : {}}>
-                                    <ImageLoader key={image.id} image={image} isSmallScreen={isSmallScreen} contract={decentiktok} address={address} />
-                                    <ImageListItemBar
-                                        title={
-                                            window.navigator.brave ? (
-                                                <a target="_blank" href={`ipfs://${image.hash}`} style={{ color: "white" }}>
-                                                    {image.description}
-                                                </a>
-                                            ) : (
-                                                <a target="_blank" href={`https://ipfs.io/ipfs/${image.hash}`} style={{ color: "white" }}>
-                                                    {image.description}
-                                                </a>
-                                            )
-                                        }
-                                        subtitle={
-                                            image.distance ? (
-                                                <IconButton
-                                                    style={{ fontSize: "unset", color: "white" }}
-                                                    onClick={event => {
-                                                        var distance = calcDistance(images[image.id.toNumber() - 1], longitude, latitude);
-                                                        console.log(image.id, distance);
-                                                    }}
-                                                >
-                                                    <LocationOnIcon />
-                                                    <span>{image.distance}</span>
-                                                </IconButton>
-                                            ) : (
-                                                <></>
-                                            )
-                                        }
-                                        actionIcon={
-                                            <IconButton
-                                                // aria-label={`star ${image.id}`}
-                                                onClick={event => {
-                                                    console.log(image.id.toNumber());
-                                                    let tipAmount = ethers.utils.parseEther("0.001");
-                                                    decentiktok.tipImageOwner(image.id.toNumber(), { from: address, value: tipAmount });
-                                                }}
-                                            >
-                                                {/* <StarBorderIcon /> */}
-                                                <FavoriteBorderIcon />
-                                            </IconButton>
-                                        }
-                                    ></ImageListItemBar>
-                                    <div></div>
-                                </ImageListItem>
-                            );
-                        })}
-                    </ImageList>
-                </Route>
-
                 <Route exact path="/">
-                    <Redirect to="/upload" />
+                    <Redirect to="/ido" />
                 </Route>
 
-                <Route path="/upload">
-                    <div className="referral-view">
-                        <Zoom in={true}>
-                            <div className="referral-card">
-                                <div className="referral-card-area">{!address ? connectWallet() : upload()}</div>
-                            </div>
-                        </Zoom>
-                    </div>
-                </Route>
+                <Route path="/ido">{address ? <IDO provider={provider} address={address} dispatch={dispatch} /> : connectWallet()}</Route>
                 <Route component={NotFound} />
             </Switch>
         </ViewBase>
